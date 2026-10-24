@@ -281,7 +281,7 @@ function Admin() {
             ))}
           </select>
         </div>
-        {error && <p className="error">{error}</p>}
+        {error && !editing && <p className="error">{error}</p>}
         <table>
           <thead>
             <tr>
@@ -327,10 +327,11 @@ function Admin() {
       {editing && (
         <section className="card">
           <h2>{editing.isNew ? 'Нова акція' : 'Редагування акції'}</h2>
+          {error && <p className="error">Помилка валідації: {error}</p>}
           <textarea value={editing.text} onChange={(e) => setEditing({ ...editing, text: e.target.value })} rows={18} spellCheck={false} />
           <div className="row">
             <button onClick={save}>Зберегти</button>
-            <button className="secondary" onClick={() => setEditing(null)}>
+            <button className="secondary" onClick={() => (setEditing(null), setError(''))}>
               Скасувати
             </button>
           </div>
