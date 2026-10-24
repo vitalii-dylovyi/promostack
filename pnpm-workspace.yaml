@@ -1,3 +1,6 @@
 packages:
   - packages/*
   - apps/*
+
+# skip packages published less than a day ago (supply-chain safety)
+minimumReleaseAge: 1440
