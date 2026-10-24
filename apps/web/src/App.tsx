@@ -308,7 +308,7 @@ function Admin() {
                   {kinds[p.kind]}
                   <div className="muted small">{describe(p)}</div>
                 </td>
-                <td>{p.group ?? '—'}</td>
+                <td>{p.group ?? '-'}</td>
                 <td>{p.combinable === false ? 'ні' : 'так'}</td>
                 <td className="num">{p.priority ?? 0}</td>
                 <td className="actions">
@@ -366,7 +366,7 @@ function Audit() {
               <tr className="clickable" onClick={() => setOpen(open === r.id ? null : r.id)}>
                 <td>{r.id}</td>
                 <td>{new Date(r.at).toLocaleString('uk-UA')}</td>
-                <td>{r.channel ?? '—'}</td>
+                <td>{r.channel ?? '-'}</td>
                 <td>{strategies[r.strategy]}</td>
                 <td className="num">{money(r.subtotal)}</td>
                 <td className="num save">−{money(r.discount)}</td>
