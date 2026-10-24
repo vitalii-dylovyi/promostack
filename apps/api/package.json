@@ -1,0 +1,13 @@
+{
+  "name": "@promostack/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@fastify/static": "^10.1.7",
+    "@fastify/swagger": "^9.9.2",
+    "@fastify/swagger-ui": "^6.1.2",
+    "@promostack/engine": "workspace:*",
+    "fastify": "^5.12.7"
+  }
+}

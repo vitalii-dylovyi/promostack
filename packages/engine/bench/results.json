@@ -1,0 +1,230 @@
+{
+  "env": {
+    "node": "v26.3.0",
+    "platform": "darwin-arm64",
+    "runsPerSize": 300,
+    "date": "2026-10-24T22:43:40.118Z"
+  },
+  "rows": [
+    {
+      "size": "S",
+      "lines": 5,
+      "promotions": 5,
+      "avgUnits": 10.2,
+      "priorityWorsePct": 37.7,
+      "greedyWorsePct": 6,
+      "priorityGapMeanPct": 18.11,
+      "priorityGapMaxPct": 99.17,
+      "priorityGapMedianPct": 0,
+      "informedWorsePct": 16.7,
+      "informedGapMeanPct": 5.04,
+      "greedyGapMeanPct": 1.08,
+      "optimalCompletePct": 100,
+      "nodesMean": 2.1,
+      "nodesExhaustiveMean": 3.5,
+      "p50": {
+        "priority": 0.011,
+        "greedy": 0.011,
+        "optimal": 0.014
+      },
+      "p95": {
+        "priority": 0.019,
+        "greedy": 0.019,
+        "optimal": 0.025
+      },
+      "max": {
+        "priority": 0.174,
+        "greedy": 0.088,
+        "optimal": 0.091
+      }
+    },
+    {
+      "size": "M",
+      "lines": 10,
+      "promotions": 10,
+      "avgUnits": 25.2,
+      "priorityWorsePct": 80.3,
+      "greedyWorsePct": 21.7,
+      "priorityGapMeanPct": 33.02,
+      "priorityGapMaxPct": 99.22,
+      "priorityGapMedianPct": 24.94,
+      "informedWorsePct": 37.3,
+      "informedGapMeanPct": 5.73,
+      "greedyGapMeanPct": 2.32,
+      "optimalCompletePct": 100,
+      "nodesMean": 11.8,
+      "nodesExhaustiveMean": 29.7,
+      "p50": {
+        "priority": 0.027,
+        "greedy": 0.033,
+        "optimal": 0.051
+      },
+      "p95": {
+        "priority": 0.042,
+        "greedy": 0.065,
+        "optimal": 0.139
+      },
+      "max": {
+        "priority": 0.129,
+        "greedy": 0.251,
+        "optimal": 0.646
+      }
+    },
+    {
+      "size": "L",
+      "lines": 20,
+      "promotions": 20,
+      "avgUnits": 50.1,
+      "priorityWorsePct": 97.3,
+      "greedyWorsePct": 56.3,
+      "priorityGapMeanPct": 42.09,
+      "priorityGapMaxPct": 99.42,
+      "priorityGapMedianPct": 39.38,
+      "informedWorsePct": 82,
+      "informedGapMeanPct": 10.38,
+      "greedyGapMeanPct": 2.9,
+      "optimalCompletePct": 100,
+      "nodesMean": 533,
+      "nodesExhaustiveMean": null,
+      "p50": {
+        "priority": 0.073,
+        "greedy": 0.094,
+        "optimal": 0.499
+      },
+      "p95": {
+        "priority": 0.111,
+        "greedy": 0.165,
+        "optimal": 4.785
+      },
+      "max": {
+        "priority": 0.256,
+        "greedy": 0.313,
+        "optimal": 18.491
+      }
+    },
+    {
+      "size": "XL",
+      "lines": 36,
+      "promotions": 30,
+      "avgUnits": 125.7,
+      "priorityWorsePct": 100,
+      "greedyWorsePct": 63.7,
+      "priorityGapMeanPct": 46.6,
+      "priorityGapMaxPct": 99.87,
+      "priorityGapMedianPct": 44.13,
+      "informedWorsePct": 94.7,
+      "informedGapMeanPct": 12.11,
+      "greedyGapMeanPct": 3.3,
+      "optimalCompletePct": 45,
+      "nodesMean": 13141.1,
+      "nodesExhaustiveMean": null,
+      "p50": {
+        "priority": 0.203,
+        "greedy": 0.324,
+        "optimal": 73.758
+      },
+      "p95": {
+        "priority": 0.279,
+        "greedy": 0.456,
+        "optimal": 365.09
+      },
+      "max": {
+        "priority": 0.388,
+        "greedy": 0.67,
+        "optimal": 2625.027
+      }
+    }
+  ],
+  "sweep": [
+    {
+      "size": "L",
+      "nodeBudget": 500,
+      "completePct": 77.3,
+      "gapMeanPct": 0.076,
+      "gapMaxPct": 4.75,
+      "p50": 0.506,
+      "p95": 2.584
+    },
+    {
+      "size": "L",
+      "nodeBudget": 1000,
+      "completePct": 88.7,
+      "gapMeanPct": 0.014,
+      "gapMaxPct": 1.04,
+      "p50": 0.521,
+      "p95": 2.918
+    },
+    {
+      "size": "L",
+      "nodeBudget": 2000,
+      "completePct": 95.3,
+      "gapMeanPct": 0,
+      "gapMaxPct": 0,
+      "p50": 0.504,
+      "p95": 4.41
+    },
+    {
+      "size": "L",
+      "nodeBudget": 5000,
+      "completePct": 100,
+      "gapMeanPct": 0,
+      "gapMaxPct": 0,
+      "p50": 0.516,
+      "p95": 7.158
+    },
+    {
+      "size": "L",
+      "nodeBudget": 20000,
+      "completePct": 100,
+      "gapMeanPct": 0,
+      "gapMaxPct": 0,
+      "p50": 0.512,
+      "p95": 7.019
+    },
+    {
+      "size": "XL",
+      "nodeBudget": 500,
+      "completePct": 9.3,
+      "gapMeanPct": 0.901,
+      "gapMaxPct": 20.45,
+      "p50": 3.168,
+      "p95": 14.946
+    },
+    {
+      "size": "XL",
+      "nodeBudget": 1000,
+      "completePct": 13.3,
+      "gapMeanPct": 0.793,
+      "gapMaxPct": 20.45,
+      "p50": 5.901,
+      "p95": 25.755
+    },
+    {
+      "size": "XL",
+      "nodeBudget": 2000,
+      "completePct": 20,
+      "gapMeanPct": 0.783,
+      "gapMaxPct": 20.45,
+      "p50": 10.932,
+      "p95": 50.365
+    },
+    {
+      "size": "XL",
+      "nodeBudget": 5000,
+      "completePct": 28.7,
+      "gapMeanPct": 0.741,
+      "gapMaxPct": 20.45,
+      "p50": 24.441,
+      "p95": 117.19
+    },
+    {
+      "size": "XL",
+      "nodeBudget": 20000,
+      "completePct": 43.3,
+      "gapMeanPct": 0.622,
+      "gapMaxPct": 20.45,
+      "p50": 83.723,
+      "p95": 366.545
+    }
+  ]
+}

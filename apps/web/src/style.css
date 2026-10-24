@@ -1,0 +1,64 @@
+:root {
+  --bg: #f5f6f8;
+  --card: #fff;
+  --text: #1c2330;
+  --muted: #6b7484;
+  --line: #e3e6ec;
+  --accent: #2f5bea;
+  --save: #138a4a;
+  --danger: #c0392b;
+  font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+.top { display: flex; align-items: center; gap: 24px; padding: 10px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 1; }
+.logo { font-size: 18px; color: var(--accent); }
+nav { display: flex; gap: 4px; }
+.tab { background: none; border: 0; padding: 8px 14px; border-radius: 6px; color: var(--text); cursor: pointer; text-decoration: none; font: inherit; }
+.tab.active, .tab:hover { background: #e9eefc; color: var(--accent); }
+main { padding: 16px 20px; max-width: 1400px; margin: 0 auto; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+h2 { font-size: 16px; margin: 0 0 12px; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 16px 0 6px; }
+.pos { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 16px; align-items: start; }
+.admin { display: grid; gap: 16px; }
+@media (max-width: 1100px) { .pos { grid-template-columns: 1fr; } }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.product { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: #fafbfc; cursor: pointer; font: inherit; color: inherit; }
+.product:hover { border-color: var(--accent); }
+.product small { color: var(--muted); }
+.controls { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+select, input, textarea { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--text); }
+textarea { width: 100%; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; }
+.num { text-align: right; white-space: nowrap; }
+.qty { white-space: nowrap; }
+.qty button { width: 24px; height: 24px; margin: 0 6px; padding: 0; border: 1px solid var(--line); background: #fff; color: var(--text); border-radius: 5px; cursor: pointer; }
+.adj { color: var(--save); font-size: 12px; }
+.totals { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; margin: 12px 0; }
+.totals dd { margin: 0; text-align: right; }
+.big { font-size: 18px; font-weight: 700; }
+.save { color: var(--save); }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.error { color: var(--danger); background: #fdeeee; padding: 8px 10px; border-radius: 6px; }
+button { font: inherit; padding: 7px 14px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; }
+button.secondary { background: #fff; color: var(--accent); }
+button.danger { background: #fff; color: var(--danger); border-color: var(--danger); }
+.compare { margin-top: 12px; }
+.list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.list li { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.list small { grid-column: 1 / -1; }
+.tag { font-size: 11.5px; padding: 1px 8px; border-radius: 99px; background: #eef0f4; white-space: nowrap; }
+.tag.BETTER_ALTERNATIVE, .tag.GROUP_CONFLICT, .tag.NOT_COMBINABLE { background: #fff4dc; color: #8a5a00; }
+.row { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin: 8px 0; }
+.row h2 { margin-right: auto; }
+.key input { width: 180px; }
+.actions { white-space: nowrap; display: flex; gap: 6px; }
+.clickable { cursor: pointer; }
+.clickable:hover { background: #f7f9ff; }
