@@ -2,6 +2,8 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 import type { Basket, Promotion, Result, Strategy } from '@promostack/engine';
 import { api, adminKey, type Calculation, type LogEntry, type Product } from './api.ts';
 import { describe, kinds, money, reasons, strategies, templates } from './labels.ts';
+import { PromoForm } from './PromoForm.tsx';
+import { clean } from './promoForm.ts';
 
 type Tab = 'pos' | 'admin' | 'audit';
 
@@ -229,12 +231,18 @@ function Explanation({ result }: { result: Result }) {
 
 function Admin() {
   const [promos, setPromos] = useState<Promotion[]>([]);
-  const [editing, setEditing] = useState<{ text: string; isNew: boolean } | null>(null);
+  type Editing = { draft: Promotion; isNew: boolean; json: string | null; session: number };
+  const [editing, setEditing] = useState<Editing | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState('');
   const [key, setKey] = useState(adminKey.get());
 
   const load = () => api.promotions().then(setPromos, (e) => setError(e.message));
-  useEffect(() => void load(), []);
+  useEffect(() => {
+    load();
+    api.products().then(setProducts, () => {});
+  }, []);
+  const edit = (draft: Promotion, isNew: boolean) => (setError(''), setEditing({ draft, isNew, json: null, session: Date.now() }));
 
   const run = (f: () => Promise<unknown>) =>
     f().then(
@@ -247,13 +255,25 @@ function Admin() {
     );
 
   const save = () => {
-    let p: Promotion;
-    try {
-      p = JSON.parse(editing!.text);
-    } catch {
-      return setError('Некоректний JSON');
+    let p = editing!.draft;
+    if (editing!.json !== null) {
+      try {
+        p = JSON.parse(editing!.json);
+      } catch {
+        return setError('Некоректний JSON');
+      }
     }
+    p = clean(p);
     run(() => (editing!.isNew ? api.createPromotion(p) : api.updatePromotion(p)));
+  };
+  const toggleJson = () => {
+    const e = editing!;
+    if (e.json === null) return setEditing({ ...e, json: JSON.stringify(clean(e.draft), null, 2) });
+    try {
+      setEditing({ ...e, draft: JSON.parse(e.json), json: null, session: Date.now() });
+    } catch {
+      setError('Некоректний JSON');
+    }
   };
 
   return (
@@ -272,7 +292,7 @@ function Admin() {
               }}
             />
           </label>
-          <select value="" onChange={(e) => e.target.value && setEditing({ text: JSON.stringify(templates[e.target.value as Promotion['kind']], null, 2), isNew: true })}>
+          <select value="" onChange={(e) => e.target.value && edit(templates[e.target.value as Promotion['kind']], true)}>
             <option value="">+ Нова акція…</option>
             {Object.entries(kinds).map(([k, v]) => (
               <option key={k} value={k}>
@@ -312,7 +332,7 @@ function Admin() {
                 <td>{p.combinable === false ? 'ні' : 'так'}</td>
                 <td className="num">{p.priority ?? 0}</td>
                 <td className="actions">
-                  <button className="secondary" onClick={() => setEditing({ text: JSON.stringify(p, null, 2), isNew: false })}>
+                  <button className="secondary" onClick={() => edit(p, false)}>
                     Змінити
                   </button>
                   <button className="danger" onClick={() => confirm(`Видалити «${p.name}»?`) && run(() => api.deletePromotion(p.id))}>
@@ -328,9 +348,22 @@ function Admin() {
         <section className="card">
           <h2>{editing.isNew ? 'Нова акція' : 'Редагування акції'}</h2>
           {error && <p className="error">Помилка валідації: {error}</p>}
-          <textarea value={editing.text} onChange={(e) => setEditing({ ...editing, text: e.target.value })} rows={18} spellCheck={false} />
+          {editing.json === null ? (
+            <PromoForm
+              key={`${editing.session}-${editing.draft.kind}`}
+              value={editing.draft}
+              isNew={editing.isNew}
+              products={products}
+              onChange={(draft) => setEditing({ ...editing, draft })}
+            />
+          ) : (
+            <textarea value={editing.json} onChange={(e) => setEditing({ ...editing, json: e.target.value })} rows={18} spellCheck={false} />
+          )}
           <div className="row">
             <button onClick={save}>Зберегти</button>
+            <button className="secondary" onClick={toggleJson}>
+              {editing.json === null ? 'Режим JSON' : 'Повернутися до форми'}
+            </button>
             <button className="secondary" onClick={() => (setEditing(null), setError(''))}>
               Скасувати
             </button>
