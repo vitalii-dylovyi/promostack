@@ -19,7 +19,7 @@
 ```
 packages/engine   рушій розрахунку (TypeScript, без залежностей), тести, бенчмарк
 apps/api          REST API: Fastify + SQLite (node:sqlite)
-apps/web          адмін-панель, симулятор каси, журнал (React + Vite)
+apps/web          адмін-панель, симулятор каси, журнал (React + Vite + shadcn/ui)
 ```
 
 ## Запуск

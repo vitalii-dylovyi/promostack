@@ -31,21 +31,25 @@ export const kinds: Record<Promotion['kind'], string> = {
   basket_threshold: 'Знижка від суми чека',
 };
 
-const targetText = (t: { skus?: string[]; categories?: string[] }) =>
-  [t.skus?.length ? `товари: ${t.skus.join(', ')}` : '', t.categories?.length ? `категорії: ${t.categories.join(', ')}` : '']
+const targetText = (t: { skus?: string[]; categories?: string[] }, names?: Map<string, string>) =>
+  [
+    t.skus?.length ? `товари: ${t.skus.map((s) => names?.get(s) ?? s).join(', ')}` : '',
+    t.categories?.length ? `категорії: ${t.categories.join(', ')}` : '',
+  ]
     .filter(Boolean)
     .join('; ') || 'усі товари';
 
-export function describe(p: Promotion): string {
+/** Human-readable summary; pass product names to show them instead of SKUs. */
+export function describe(p: Promotion, names?: Map<string, string>): string {
   switch (p.kind) {
     case 'percent_off':
-      return `-${p.percent}% (${targetText(p.target)})`;
+      return `-${p.percent}% (${targetText(p.target, names)})`;
     case 'amount_off':
-      return `-${money(p.amount)} за одиницю (${targetText(p.target)})`;
+      return `-${money(p.amount)} за одиницю (${targetText(p.target, names)})`;
     case 'buy_x_get_y':
-      return `${p.buy}+${p.get}: ${p.percent === 100 ? 'безкоштовно' : `-${p.percent}%`} на дешевший (${targetText(p.target)})`;
+      return `${p.buy}+${p.get}: ${p.percent === 100 ? 'безкоштовно' : `-${p.percent}%`} на дешевший (${targetText(p.target, names)})`;
     case 'bundle_price':
-      return `${p.components.map((c) => `${c.quantity}× ${targetText(c.target)}`).join(' + ')} за ${money(p.price)}`;
+      return `${p.components.map((c) => `${c.quantity}× ${targetText(c.target, names)}`).join(' + ')} за ${money(p.price)}`;
     case 'basket_threshold':
       return `від ${money(p.minSubtotal)}: ${p.percent ? `-${p.percent}%` : ''}${p.amount ? ` -${money(p.amount)}` : ''}`;
   }
