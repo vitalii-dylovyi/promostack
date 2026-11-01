@@ -118,11 +118,14 @@ export function Admin() {
               {promos.map((p) => (
                 <TableRow key={p.id} data-promo={p.id} className={p.active === false ? 'text-muted-foreground' : undefined}>
                   <TableCell>
-                    <Switch
-                      checked={p.active !== false}
-                      aria-label={`Активна: ${p.name}`}
-                      onCheckedChange={(on) => run(() => api.updatePromotion({ ...p, active: on }))}
-                    />
+                    {/* flex keeps the inline switch off the text baseline, centred in two-line rows */}
+                    <div className="flex items-center">
+                      <Switch
+                        checked={p.active !== false}
+                        aria-label={`Активна: ${p.name}`}
+                        onCheckedChange={(on) => run(() => api.updatePromotion({ ...p, active: on }))}
+                      />
+                    </div>
                   </TableCell>
                   <TableCell className="whitespace-normal">
                     <div className="font-medium">{p.name}</div>
