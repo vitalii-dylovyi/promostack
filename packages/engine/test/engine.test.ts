@@ -139,7 +139,7 @@ test('invariants hold on random scenarios', () => {
 test('pruning never loses the optimum (compared with full enumeration)', () => {
   const r = rng(7);
   for (let i = 0; i < 300; i++) {
-    const { basket: b, promotions } = scenario(r, { lines: 2 + (i % 5), promotions: 2 + (i % 6), maxQty: 3 });
+    const { basket: b, promotions } = scenario(r, { lines: 2 + (i % 8), promotions: 2 + (i % 11), maxQty: 4 });
     const pruned = calculate(b, promotions, { nodeBudget: Infinity });
     const full = calculate(b, promotions, { nodeBudget: Infinity, exhaustive: true });
     assert.equal(pruned.discount, full.discount, `scenario ${i}`);

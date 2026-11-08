@@ -53,7 +53,11 @@ interface Ctx {
   pairs: { u: number; p: PerUnit; d: Money }[];
   /** Best per-unit discount of each unit, ignoring groups and caps: used by the search bound. */
   bestPerUnit: Money[];
-  basketMax: Money;
+  /**
+   * shareFrom[i][u]: the most unit u can add to the discount once multi-unit promotions before i are fixed,
+   * whether it ends up in one of multi[i..] or gets a per-unit discount. Summed over free units it bounds the search.
+   */
+  shareFrom: Float64Array[];
 }
 
 const DEFAULT_BUDGET = 2_000;
@@ -146,7 +150,24 @@ function context(basket: Basket, promotions: Promotion[]): Ctx {
   const order = new Map(perUnit.map((p, i) => [p.id, i]));
   pairs.sort((a, b) => b.d - a.d || order.get(a.p.id)! - order.get(b.p.id)! || a.u - b.u);
 
-  const basketMax = sum(basketLayer.map((p) => pct(gross, p.percent ?? 0) + (p.amount ?? 0)));
+  // Upper bound on the share of an application's discount that falls on one unit.
+  // X+Y: the discounted units are the cheapest of the set, so the discount is at most get/(buy+get) of the set's
+  // value (plus rounding). Bundle: each unit gets price * (1 - bundle price / set value), largest for the dearest set.
+  const shares = multi.map((p) => {
+    const s = new Float64Array(units.length);
+    const e = elig.get(p.id)!;
+    if (p.kind === 'buy_x_get_y') {
+      const f = p.get / (p.buy + p.get);
+      for (const u of e[0]) s[u] = ((units[u].price * p.percent) / 100 + 0.5) * f;
+    } else if (p.kind === 'bundle_price') {
+      const top = sum(p.components.map((c, i) => sum(e[i].slice(0, c.quantity).map((u) => units[u].price))));
+      const f = top > p.price ? 1 - p.price / top : 0;
+      for (const list of e) for (const u of list) s[u] = units[u].price * f;
+    }
+    return s;
+  });
+  const shareFrom = [Float64Array.from(bestPerUnit)];
+  for (let j = multi.length - 1; j >= 0; j--) shareFrom.unshift(shareFrom[0].map((v, u) => Math.max(v, shares[j][u])));
 
   return {
     lines,
@@ -161,7 +182,7 @@ function context(basket: Basket, promotions: Promotion[]): Ctx {
     nonCombinable: candidates.filter((p) => p.combinable === false),
     pairs,
     bestPerUnit,
-    basketMax,
+    shareFrom,
   };
 }
 
@@ -282,6 +303,23 @@ function tail(ctx: Ctx, free: Uint8Array, used: Set<string>, itemDisc: Money, wi
   return best;
 }
 
+/**
+ * Most the basket layer can add once item discounts are at least `itemDisc`: only thresholds the remaining subtotal
+ * can still reach, and one member per group.
+ */
+function basketBound(ctx: Ctx, itemDisc: Money) {
+  const sub = ctx.gross - itemDisc;
+  const best = new Map<string, Money>();
+  let b = 0;
+  for (const p of ctx.basket) {
+    if (sub < p.minSubtotal) continue;
+    const v = pct(sub, p.percent ?? 0) + (p.amount ?? 0);
+    if (!p.group) b += v;
+    else best.set(p.group, Math.max(best.get(p.group) ?? 0, v));
+  }
+  return Math.min(sub, b + sum([...best.values()]));
+}
+
 function standalone(ctx: Ctx, p: Promotion): Solution {
   if (p.kind === 'basket_threshold') {
     const basket = basketAmounts(ctx, [p], ctx.gross);
@@ -370,8 +408,16 @@ function optimal(ctx: Ctx, budget: number, prune = true) {
   let nodes = 0;
   let complete = true;
 
-  const bound = (i: number) => {
-    let b = ctx.basketMax;
+  // Each free unit is counted once at its best possible share, so competing promotions are not double counted.
+  const unitBound = (i: number, disc: Money) => {
+    let b = basketBound(ctx, disc);
+    const share = ctx.shareFrom[i];
+    for (let u = 0; u < free.length; u++) if (free[u]) b += share[u];
+    return b;
+  };
+  // Each remaining promotion on its own: tighter when few promotions compete for the same units.
+  const bound = (i: number, disc: Money) => {
+    let b = basketBound(ctx, disc);
     for (let u = 0; u < free.length; u++) if (free[u]) b += ctx.bestPerUnit[u];
     for (let j = i; j < ctx.multi.length; j++) {
       const p = ctx.multi[j];
@@ -392,7 +438,7 @@ function optimal(ctx: Ctx, budget: number, prune = true) {
       }
       return;
     }
-    if (prune && disc + bound(i) <= best.total) return;
+    if (prune && (disc + unitBound(i, disc) <= best.total || disc + bound(i, disc) <= best.total)) return;
     const p = ctx.multi[i];
     if (p.group && used.has(p.group)) return dfs(i + 1, disc);
     const apps = applyMax(ctx, p, free);
